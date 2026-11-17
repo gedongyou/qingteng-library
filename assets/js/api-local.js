@@ -195,7 +195,7 @@ GET('/api/overview', () => {
   const latest = s.books
     .slice()
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)) || b.id - a.id)
-    .slice(0, 6);
+    .slice(0, 10);
   const notices = table('notices')
     .slice()
     .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || String(b.createdAt).localeCompare(String(a.createdAt)))
