@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body class="auth-body">
+<div id="site-header"></div>
+
+<main id="main" class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-intro">
+      <div class="auth-mark">青</div>
+      <h1>登录图书室</h1>
+      <p class="sub">读者用借书证号（学号）登录，可查馆藏、借书、预约与续借。</p>
+
+      <form id="login-form" class="auth-form">
+        <div class="field">
+          <label for="cardNo">借书证号 / 学号</label>
+          <input class="input" id="cardNo" name="cardNo" autocomplete="username" required
+                 placeholder="如 2023010101" autofocus>
+        </div>
+        <div class="field">
+          <label for="password">密码</label>
+          <div class="pwd-wrap">
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" required placeholder="初始密码 123456">
+            <button type="button" class="pwd-toggle" id="pwd-toggle" aria-label="显示密码">显示</button>
+          </div>
+        </div>
+        <p class="err" id="err" role="alert" hidden></p>
+        <button class="btn btn-lg btn-block" type="submit" id="submit">登录</button>
+      </form>
+
+      <div class="demo-accounts">
+        <p class="demo-title">演示账号（点击填入）</p>
+        <div class="demo-list">
+          <button data-card="2023010101" data-pwd="123456"><b>读者</b><span>2023010101 / 123456</span></button>
+          <button data-card="lib001" data-pwd="lib123"><b>馆员</b><span>lib001 / lib123</span></button>
+          <button data-card="admin" data-pwd="admin123"><b>管理员</b><span>admin / admin123</span></button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="auth-side">
+      <h2>借阅须知</h2>
+      <ul class="rules" id="rules-list">
+        <li><span>借期</span><b>30 天</b></li>
+        <li><span>续借</span><b>最多 2 次，每次 15 天</b></li>
+        <li><span>上限</span><b>同时 5 册</b></li>
+        <li><span>预约</span><b>到书后保留 3 天</b></li>
+        <li><span>逾期</span><b>每天 0.2 元（提示用）</b></li>
+      </ul>
+      <div class="side-note">
+        <p>忘记密码或借书证被冻结，请到教学楼 A 座 1 层流通台办理。</p>
+        <a href="notices.html">查看完整借阅规则 →</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="assets/js/login.js"></script>
+</body>
+</html>

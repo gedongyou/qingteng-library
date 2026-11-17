@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>图书详情 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/detail.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div id="site-header"></div>
+
+<main id="main" class="wrap detail-wrap">
+  <nav class="crumb" aria-label="面包屑">
+    <a href="index.html">首页</a><span>/</span><a href="search.html">馆藏检索</a><span>/</span>
+    <span id="crumb-title" aria-current="page">图书详情</span>
+  </nav>
+
+  <div class="detail" id="detail">
+    <div class="detail-cover skeleton" style="aspect-ratio:3/4"></div>
+    <div class="detail-main">
+      <div class="skeleton" style="height:30px;width:60%;margin-bottom:12px"></div>
+      <div class="skeleton" style="height:16px;width:40%"></div>
+    </div>
+  </div>
+
+  <section class="related-sec">
+    <div class="sec-head"><h2>同类推荐</h2></div>
+    <div class="book-grid" id="related"></div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="assets/js/detail.js"></script>
+</body>
+</html>

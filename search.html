@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>馆藏检索 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/search.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div id="site-header"></div>
+
+<main id="main">
+  <div class="page-head">
+    <div class="wrap">
+      <nav class="crumb" aria-label="面包屑">
+        <a href="index.html">首页</a><span>/</span><span aria-current="page">馆藏检索</span>
+      </nav>
+      <h1>馆藏检索</h1>
+      <p class="sub">按书名、作者、ISBN、出版社或标签查找；每一册的下落都能看到。</p>
+
+      <form class="filter-bar" id="filter-form">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+          </svg>
+          <input id="kw" type="search" placeholder="书名 / 作者 / ISBN / 关键词" autocomplete="off" aria-label="关键词">
+          <button class="btn btn-sm" type="submit">搜索</button>
+        </div>
+        <div class="filters">
+          <label>
+            <span>分类</span>
+            <select id="cat" class="select"><option value="">全部分类</option></select>
+          </label>
+          <label>
+            <span>状态</span>
+            <select id="status" class="select">
+              <option value="">全部状态</option>
+              <option value="available">在架可借</option>
+              <option value="out">已全部借出</option>
+            </select>
+          </label>
+          <label>
+            <span>排序</span>
+            <select id="sort" class="select">
+              <option value="newest">最新上架</option>
+              <option value="hot">借阅最多</option>
+              <option value="title">书名 A→Z</option>
+            </select>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="wrap results-wrap">
+    <aside class="side">
+      <h2 class="side-title">分类浏览</h2>
+      <ul class="cat-nav" id="cat-nav"></ul>
+      <div class="side-card">
+        <h3>借不到怎么办</h3>
+        <p>书全部借出时点「预约」，有人还书后系统按排队顺序为你保留 3 天。</p>
+        <a href="notices.html">借阅规则 →</a>
+      </div>
+    </aside>
+
+    <section class="results">
+      <div class="results-head">
+        <p id="result-summary" class="summary">正在检索…</p>
+        <div class="view-tools">
+          <button class="chip" id="clear" hidden>清除筛选 ×</button>
+        </div>
+      </div>
+      <div id="list" class="book-grid"></div>
+      <nav class="pager" id="pager" aria-label="分页"></nav>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="assets/js/search.js"></script>
+</body>
+</html>

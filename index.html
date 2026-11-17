@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>青藤图书室 · 校园图书借阅预约系统</title>
+<meta name="description" content="在线查书、预约借书、归还登记、库存管理——小型图书室的一整套借阅流程。">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/home.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div id="site-header"></div>
+
+<main id="main">
+  <!-- 首屏：搜索 -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">馆藏检索 · 在线预约 · 到馆取书</p>
+        <h1>想看的书，<br>先在架上问一声</h1>
+        <p class="lede">
+          全馆 <b data-fill="books">—</b> 种、<b data-fill="copies">—</b> 册图书的状态实时可查。
+          借出的书可以排队预约，到馆后系统会为你预留三天。
+        </p>
+        <form class="search-box" id="hero-search" role="search">
+          <svg class="ico" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+          </svg>
+          <input id="q" name="q" type="search" placeholder="书名、作者、ISBN 或关键词，如「网络」「余华」"
+                 autocomplete="off" aria-label="检索馆藏">
+          <button class="btn" type="submit">检索</button>
+        </form>
+        <div class="hot-words">
+          <span>大家在找：</span>
+          <a href="search.html?keyword=计算机网络">计算机网络</a>
+          <a href="search.html?keyword=余华">余华</a>
+          <a href="search.html?keyword=Python">Python</a>
+          <a href="search.html?keyword=算法">算法</a>
+          <a href="search.html?status=available">只看在架</a>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="图书室实时数据">
+        <div class="hero-card-head">
+          <span class="live"><i class="dot"></i>实时</span>
+          <span class="small muted" id="updated-at">刚刚更新</span>
+        </div>
+        <dl class="stat-grid" id="stat-grid">
+          <div><dt>在架可借</dt><dd class="mono" data-k="availableCopies">—</dd></div>
+          <div><dt>馆藏总册</dt><dd class="mono" data-k="copies">—</dd></div>
+          <div><dt>当前外借</dt><dd class="mono" data-k="borrowing">—</dd></div>
+          <div><dt>预约排队</dt><dd class="mono" data-k="reservations">—</dd></div>
+        </dl>
+        <div class="hero-card-foot">
+          <div class="rule-row"><span>借期</span><b id="rule-days">30 天</b></div>
+          <div class="rule-row"><span>可续借</span><b id="rule-renew">2 次</b></div>
+          <div class="rule-row"><span>单人上限</span><b id="rule-max">5 册</b></div>
+        </div>
+        <a class="hero-link" href="notices.html">查看借阅规则与开馆时间 →</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 分类 -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>按分类找书</h2>
+        <a class="more" href="search.html">全部馆藏 →</a>
+      </div>
+      <div class="cat-grid" id="cat-grid"></div>
+    </div>
+  </section>
+
+  <!-- 新书 & 热门 -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>最近上架</h2>
+        <a class="more" href="search.html?sort=newest">更多新书 →</a>
+      </div>
+      <div class="book-grid" id="latest-grid"></div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap">
+      <div class="two-col">
+        <div>
+          <div class="sec-head">
+            <h2>借得最多的书</h2>
+            <a class="more" href="search.html?sort=hot">借阅排行 →</a>
+          </div>
+          <ol class="rank-list" id="hot-list"></ol>
+        </div>
+        <div>
+          <div class="sec-head">
+            <h2>通知公告</h2>
+            <a class="more" href="notices.html">全部 →</a>
+          </div>
+          <div class="notice-list" id="notice-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 流程 -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head center">
+        <h2>从查书到还书，四步</h2>
+        <p class="sub">不需要跑流通台问「这本书还有吗」，系统里就能看到每一册的下落。</p>
+      </div>
+      <ol class="flow">
+        <li>
+          <span class="num">01</span>
+          <h3>查</h3>
+          <p>按书名、作者、ISBN 或分类检索，看到「在架 3 册」就说明可以直接来借。</p>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <h3>约</h3>
+          <p>书全借出去了，就点「预约」。有副本归还时，系统按排队顺序为你锁定一本。</p>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <h3>取</h3>
+          <p>「我的书房」里显示「已到书」后，三天内到流通台报学号办理借出。</p>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <h3>还</h3>
+          <p>归还时刷条码登记，逾期会提示天数与应缴金额；没看完可在到期前续借。</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="assets/js/home.js"></script>
+</body>
+</html>

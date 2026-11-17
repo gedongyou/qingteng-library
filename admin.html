@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>管理后台 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+  <aside class="admin-side">
+    <a class="admin-brand" href="index.html">
+      <span class="brand-mark">青</span>
+      <span class="brand-text">
+        <span class="brand-name">青藤图书室</span>
+        <span class="brand-sub">管理后台</span>
+      </span>
+    </a>
+
+    <nav class="admin-nav" id="admin-nav">
+      <p class="nav-group">概览</p>
+      <a href="#dashboard" data-view="dashboard"><i data-i="grid"></i>仪表盘</a>
+
+      <p class="nav-group">流通</p>
+      <a href="#circulation" data-view="circulation"><i data-i="swap"></i>借还办理</a>
+      <a href="#borrows" data-view="borrows"><i data-i="list"></i>借阅记录</a>
+      <a href="#reservations" data-view="reservations"><i data-i="clock"></i>预约管理</a>
+
+      <p class="nav-group">馆藏</p>
+      <a href="#books" data-view="books"><i data-i="book"></i>图书管理</a>
+      <a href="#categories" data-view="categories"><i data-i="tag"></i>分类管理</a>
+
+      <p class="nav-group">读者与内容</p>
+      <a href="#readers" data-view="readers"><i data-i="user"></i>读者管理</a>
+      <a href="#notices" data-view="notices"><i data-i="bell"></i>公告管理</a>
+
+      <p class="nav-group">系统</p>
+      <a href="#settings" data-view="settings"><i data-i="cog"></i>系统设置</a>
+      <a href="#logs" data-view="logs"><i data-i="doc"></i>操作日志</a>
+    </nav>
+
+    <div class="admin-side-foot">
+      <a href="index.html" class="small">← 返回前台</a>
+      <div class="me" id="admin-me"></div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-top">
+      <div class="crumb" id="admin-crumb">仪表盘</div>
+      <div class="top-right">
+        <span class="today" id="today"></span>
+        <button class="btn btn-sm btn-ghost" id="refresh">刷新</button>
+        <div class="acct" id="admin-acct"></div>
+      </div>
+    </header>
+    <main class="admin-view" id="view"></main>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+<script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>

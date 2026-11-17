@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>页面走丢了 · 青藤图书室</title>
+<!-- GitHub Pages 会把本页直接吐在出错的地址上，相对路径会失效，所以样式全部内联 -->
+<style>
+  :root { --ink:#181d1a; --ink-2:#4b544e; --ink-3:#8b938d; --line:#e9ebe8;
+          --green:#1f5d4c; --green-600:#17493c; --radius:12px;
+          --serif:"Noto Serif CJK SC","Source Han Serif SC","Songti SC",serif;
+          --sans:"Inter","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font-family:var(--sans);
+         font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  h1 { font-family:var(--serif); font-weight:700; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:38px;
+         padding:0 16px; border-radius:8px; border:1px solid transparent;
+         background:var(--green); color:#fff; font-size:14.5px; text-decoration:none; }
+  .btn:hover { background:var(--green-600); }
+  .btn-ghost { background:transparent; border-color:var(--line); color:var(--ink-2); }
+  .btn-ghost:hover { background:#f5f7f5; color:var(--ink); }
+  .err-wrap { max-width: 720px; margin: 0 auto; padding: 96px 24px 120px; text-align: center; }
+  .err-code { font-family: var(--font-serif, Georgia, serif); font-size: 96px; line-height: 1;
+    letter-spacing: -.04em; color: var(--ink, #22302b); opacity: .14; margin: 0; }
+  .err-wrap h1 { font-size: 30px; margin: -10px 0 12px; }
+  .err-wrap p { color: var(--muted, #6b7a74); margin: 0 auto 26px; max-width: 460px; line-height: 1.8; }
+  .err-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .err-links { margin-top: 44px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    font-size: 13.5px; }
+  .err-links a { color: var(--ink-2, #44544d); text-decoration: none; border-bottom: 1px solid transparent; }
+  .err-links a:hover { border-bottom-color: currentColor; }
+  .err-foot { margin-top: 60px; padding: 22px 24px 34px; border-top: 1px solid #e9ebe8;
+              text-align: center; font-size: 12.5px; color: #8b938d; }
+  .err-foot p { margin: 0; }
+</style>
+</head>
+<body>
+<main id="main" class="err-wrap">
+  <p class="err-code">404</p>
+  <h1>这个页面不在书架上</h1>
+  <p>链接可能已经失效，或者图书已被下架。回到首页重新检索，或者在馆藏里换个关键词试试。</p>
+  <div class="err-actions">
+    <a class="btn" href="search.html">去馆藏检索</a>
+    <a class="btn btn-ghost" href="index.html">返回首页</a>
+  </div>
+  <div class="err-links">
+    <a href="search.html?status=available">在架可借</a>
+    <a href="notices.html">通知公告</a>
+    <a href="my.html">我的书房</a>
+    <a href="admin.html">馆员入口</a>
+  </div>
+</main>
+
+<footer class="err-foot">
+  <p>青藤图书室 · 校园图书借阅预约系统</p>
+</footer>
+</body>
+</html>

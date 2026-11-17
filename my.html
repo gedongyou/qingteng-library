@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的书房 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/my.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div id="site-header"></div>
+
+<main id="main" class="wrap my-wrap">
+  <header class="my-head">
+    <div>
+      <p class="eyebrow">我的书房</p>
+      <h1 id="greeting">你好</h1>
+      <p class="sub" id="my-sub">正在加载借阅信息…</p>
+    </div>
+    <div class="my-stats" id="my-stats"></div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="borrowing" aria-selected="true">在借 <span id="c-borrow"></span></button>
+    <button role="tab" data-tab="reservations" aria-selected="false">预约 <span id="c-res"></span></button>
+    <button role="tab" data-tab="history" aria-selected="false">借阅历史 <span id="c-hist"></span></button>
+    <button role="tab" data-tab="account" aria-selected="false">账号</button>
+  </div>
+
+  <section id="panel-borrowing" class="panel" role="tabpanel"></section>
+  <section id="panel-reservations" class="panel" role="tabpanel" hidden></section>
+  <section id="panel-history" class="panel" role="tabpanel" hidden></section>
+  <section id="panel-account" class="panel" role="tabpanel" hidden></section>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="assets/js/my.js"></script>
+</body>
+</html>
