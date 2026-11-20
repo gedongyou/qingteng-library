@@ -197,6 +197,7 @@ export async function mountHeader({ active = '' } = {}) {
     ['index', 'index.html', '首页'],
     ['search', 'search.html', '馆藏检索'],
     ['notices', 'notices.html', '公告'],
+    ['board', 'board.html', '数字看板'],
     ...(me ? [['my', 'my.html', '我的书房']] : [['login', 'login.html', '登录']]),
     ...(me && me.role !== 'reader' ? [['admin', 'admin.html', '管理后台']] : []),
   ];
@@ -307,12 +308,14 @@ export function mountFooter() {
             <a href="search.html?status=available">在架可借</a>
             <a href="notices.html">通知公告</a>
             <a href="my.html">我的书房</a>
+            <a href="board.html">数字看板</a>
           </div>
           <div>
             <h4>使用帮助</h4>
             <a href="notices.html">借阅规则</a>
             <a href="login.html">登录问题</a>
             <a href="admin.html">馆员入口</a>
+            <a href="about.html">关于本系统</a>
           </div>
           <div>
             <h4>开放时间</h4>

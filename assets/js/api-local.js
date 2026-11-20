@@ -1,6 +1,7 @@
 /* 本地「接口层」：把原来 /api/* 的全部路由搬到浏览器里
    —— common.js 的 api() 会调用这里的 dispatch()，页面代码完全不用改 */
 import { load, save, table, find, insert, remove, nextId, flush, resetDb, clone } from './db.js';
+import { wuxinByKey } from './wuxin.js';
 import {
   ApiError, getRules, saveRules, getSetting, setSetting, log,
   bookStock, waitingCount, sweep, promoteReservation, userBorrowStats,
@@ -119,6 +120,10 @@ GET('/api/books', ({ query }) => {
       || like(b.tags, kw) || like(b.publisher, kw));
   }
   if (q.category) rows = rows.filter((b) => Number(b.categoryId) === Number(q.category));
+  if (q.wuxin) {
+    const w = wuxinByKey(q.wuxin);
+    rows = w ? rows.filter((b) => w.books.includes(Number(b.id))) : rows;
+  }
   if (q.status === 'available') rows = rows.filter((b) => b._stock.available > 0);
   if (q.status === 'out') rows = rows.filter((b) => b._stock.available === 0);
 
@@ -175,6 +180,75 @@ GET('/api/categories', () => table('categories')
 GET('/api/notices', () => table('notices')
   .slice()
   .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || String(b.createdAt).localeCompare(String(a.createdAt))));
+
+/* ---------- 数字形象看板：把馆藏数据聚合成一块可展示的画面 ---------- */
+GET('/api/board', () => {
+  const s = load();
+  const rules = getRules();
+  const nowT = Date.now();
+  const borrowed = s.borrows.filter((b) => b.status === 'borrowed');
+  const overdue = borrowed.filter((b) => b.dueAt < now());
+  const copies = s.copies;
+  const stat = (st) => copies.filter((c) => c.status === st).length;
+
+  const borrowTimes = new Map();
+  for (const b of s.borrows) borrowTimes.set(b.bookId, (borrowTimes.get(b.bookId) || 0) + 1);
+
+  const cats = table('categories');
+  const byCategory = cats.map((c) => {
+    const list = s.books.filter((b) => Number(b.categoryId) === Number(c.id));
+    const ids = new Set(list.map((b) => b.id));
+    return {
+      name: c.name,
+      books: list.length,
+      copies: copies.filter((cp) => ids.has(cp.bookId)).length,
+      times: list.reduce((n, b) => n + (borrowTimes.get(b.id) || 0), 0),
+    };
+  }).sort((a, b) => b.copies - a.copies || a.name.localeCompare(b.name));
+
+  const trend = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(nowT - i * 864e5).toISOString().slice(0, 10);
+    trend.push({
+      date: d,
+      borrow: s.borrows.filter((b) => String(b.borrowedAt).slice(0, 10) === d).length,
+      return: s.borrows.filter((b) => b.returnedAt && String(b.returnedAt).slice(0, 10) === d).length,
+    });
+  }
+
+  const topBooks = s.books
+    .map((b) => ({ id: b.id, title: b.title, author: b.author, times: borrowTimes.get(b.id) || 0 }))
+    .sort((a, b) => b.times - a.times || a.id - b.id)
+    .slice(0, 8);
+
+  const readingReaders = new Set(s.borrows.filter((b) => b.status === 'borrowed').map((b) => b.userId)).size;
+  const readers = s.users.filter((u) => u.role === 'reader').length;
+
+  return {
+    siteName: getSetting('siteName'),
+    siteSub: getSetting('siteSub'),
+    generatedAt: now(),
+    stats: {
+      books: s.books.length,
+      copies: copies.length,
+      readers,
+      readingReaders,
+      borrowing: borrowed.length,
+      available: stat('available'),
+      reserved: stat('reserved'),
+      lost: stat('lost'),
+      repair: stat('repair'),
+      overdue: overdue.length,
+      borrowTotal: s.borrows.length,
+      reservations: s.reservations.filter((r) => ['waiting', 'ready'].includes(r.status)).length,
+      categories: cats.filter((c) => s.books.some((b) => Number(b.categoryId) === Number(c.id))).length,
+    },
+    byCategory,
+    trend,
+    topBooks,
+    rules,
+  };
+});
 
 GET('/api/overview', () => {
   const s = load();

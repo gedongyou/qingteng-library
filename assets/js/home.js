@@ -1,6 +1,7 @@
 import {
   $, api, mountHeader, mountFooter, bookCard, escapeHtml, fmtRel, emptyHtml,
 } from './common.js';
+import { WUXIN } from './wuxin.js';
 
 const me = await mountHeader({ active: '/' });
 mountFooter();
@@ -63,6 +64,17 @@ $('#notice-list').innerHTML = overview.notices.length
       <time>${fmtRel(n.createdAt)}</time>
     </a>`).join('')
   : emptyHtml('暂时没有公告');
+
+/* ---------- 五心主题书架 ---------- */
+$('#wuxin-grid').innerHTML = WUXIN.map((w) => `
+  <a class="wuxin-card" href="search.html?wuxin=${w.key}" style="--wx:${w.color}">
+    <span class="wx-badge">${w.name[0]}</span>
+    <div class="wx-body">
+      <h3>${w.name} · ${w.motto}</h3>
+      <p>${w.tagline}</p>
+      <span class="wx-more">${w.books.length} 种在架 · 进架看看 →</span>
+    </div>
+  </a>`).join('');
 
 /* ---------- 搜索 ---------- */
 const form = $('#hero-search');

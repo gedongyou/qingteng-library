@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>馆藏数字看板 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/board.css">
+</head>
+<body class="board-body">
+
+<main id="main" class="board">
+  <!-- 顶栏 -->
+  <header class="board-top">
+    <div class="brand-block">
+      <span class="brand-mark">青</span>
+      <div>
+        <h1 id="b-site">青藤图书室</h1>
+        <p id="b-sub">校园图书借阅预约系统 · 馆藏数字看板</p>
+      </div>
+    </div>
+    <div class="board-meta">
+      <div class="clock">
+        <span id="b-time" class="t">--:--</span>
+        <span id="b-date" class="d">----年--月--日 星期-</span>
+      </div>
+      <a class="board-exit" href="index.html">返回首页</a>
+    </div>
+  </header>
+
+  <!-- 主指标 -->
+  <section class="board-kpi" id="b-kpi"></section>
+
+  <!-- 三栏 -->
+  <section class="board-main">
+    <div class="bpanel">
+      <div class="bpanel-head">
+        <h2>分类馆藏分布</h2>
+        <span class="bpanel-hint">按册数排序</span>
+      </div>
+      <div class="bpanel-body" id="b-cats"></div>
+    </div>
+
+    <div class="bpanel">
+      <div class="bpanel-head">
+        <h2>五心主题书架</h2>
+        <span class="bpanel-hint">红心 · 仁心 · 恒心 · 匠心 · 创心</span>
+      </div>
+      <div class="bpanel-body" id="b-wuxin"></div>
+    </div>
+
+    <div class="bpanel">
+      <div class="bpanel-head">
+        <h2>近十四天借还</h2>
+        <span class="bpanel-hint">深色借出 / 浅色归还</span>
+      </div>
+      <div class="bpanel-body" id="b-trend"></div>
+    </div>
+  </section>
+
+  <!-- 底栏 -->
+  <section class="board-foot">
+    <div class="bpanel bpanel-wide">
+      <div class="bpanel-head">
+        <h2>借阅排行</h2>
+        <span class="bpanel-hint">按累计借出次数</span>
+      </div>
+      <div class="bpanel-body" id="b-top"></div>
+    </div>
+    <div class="bpanel bpanel-tips">
+      <div class="bpanel-head"><h2>借阅规则</h2></div>
+      <div class="bpanel-body" id="b-rules"></div>
+    </div>
+  </section>
+
+  <footer class="board-bottom">
+    <span id="b-uptime">数据更新于 —</span>
+    <span>青藤图书室 · 校园图书借阅预约系统 · 毕业设计作品</span>
+  </footer>
+</main>
+
+<script type="module" src="assets/js/board.js"></script>
+</body>
+</html>

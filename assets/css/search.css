@@ -77,3 +77,63 @@ mark { background: #e8f5ee; color: #17493c; padding: 0 2px; border-radius: 3px; 
   .filters { gap: 8px; }
   .filters .select { min-width: 0; }
 }
+
+/* ---------------- 五心书架筛选条 ---------------- */
+.wuxin-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fbfcfb;
+}
+
+.wuxin-bar .wb-label {
+  font-size: 12.5px;
+  letter-spacing: .08em;
+  color: var(--ink-3);
+  margin-right: 4px;
+}
+
+.wb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px 6px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink-2);
+  font-size: 13px;
+  cursor: pointer;
+  transition: .15s;
+  font-family: inherit;
+}
+.wb-chip i {
+  width: 20px; height: 20px;
+  display: grid; place-items: center;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--wx) 12%, #fff);
+  color: var(--wx);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+}
+.wb-chip em { font-style: normal; font-size: 11.5px; color: var(--ink-3); }
+.wb-chip:hover { border-color: #cfd6d1; color: var(--ink); }
+.wb-chip.on {
+  border-color: var(--wx);
+  background: color-mix(in srgb, var(--wx) 7%, #fff);
+  color: var(--wx);
+}
+.wb-chip.on em { color: color-mix(in srgb, var(--wx) 65%, var(--ink-3)); }
+
+@media (max-width: 620px) {
+  .wuxin-bar { padding: 10px; gap: 6px; }
+  .wb-chip { font-size: 12.5px; padding: 5px 9px 5px 6px; }
+  .wb-chip em { display: none; }
+}

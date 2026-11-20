@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>关于本系统 · 青藤图书室</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/notices.css">
+<style>
+  .about-wrap { padding: 40px 0 60px; max-width: 880px; }
+  .about-wrap h1 { font-size: 30px; margin: 0 0 8px; }
+  .about-wrap .lede { color: var(--ink-2); margin: 0 0 28px; font-size: 15.5px; line-height: 1.8; }
+  .about-wrap h2 { font-size: 19px; margin: 34px 0 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .about-wrap h2:first-of-type { border-top: 0; padding-top: 0; }
+  .about-wrap p { color: var(--ink-2); line-height: 1.85; margin: 0 0 12px; }
+  .about-wrap ul { color: var(--ink-2); line-height: 1.85; padding-left: 20px; margin: 0 0 14px; }
+  .about-wrap li { margin-bottom: 5px; }
+  .form-table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 13.5px; }
+  .form-table th, .form-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .form-table th { font-weight: 600; color: var(--ink); background: #fbfcfb; width: 150px; }
+  .form-table td { color: var(--ink-2); }
+  .badge-now {
+    display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 400; letter-spacing: .04em;
+    background: var(--green-100); color: var(--green); border: 1px solid #cfe6da;
+  }
+  .note-box {
+    margin: 18px 0; padding: 14px 18px; border-radius: var(--radius);
+    background: #fbfcfb; border-left: 3px solid var(--green); font-size: 13.5px; line-height: 1.8; color: var(--ink-2);
+  }
+  .about-wrap code {
+    font-family: var(--mono); font-size: 12.5px; padding: 1px 5px;
+    background: var(--paper-2); border-radius: 5px; color: var(--green);
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div id="site-header"></div>
+
+<main id="main" class="wrap about-wrap">
+  <p class="eyebrow">关于本系统</p>
+  <h1>青藤图书室是怎么跑的</h1>
+  <p class="lede">
+    这一页说明系统的两种部署形态、当前你正在看的是哪一种，以及各自适合什么场景。
+    读者不需要读这一页也能正常借书，它是给评阅和运维看的。
+  </p>
+
+  <h2>一、两种部署形态</h2>
+  <p>
+    同一套页面与业务逻辑，本课题做了两种形态。两者的页面、样式、操作流程完全一致，区别只在数据存在哪里。
+  </p>
+
+  <table class="form-table">
+    <tr>
+      <th>单机演示版<span class="badge-now">当前站点</span></th>
+      <td>
+        整个目录放进任意静态托管（GitHub Pages、校内 Web 服务器、甚至 U 盘）即可运行。
+        数据存在当前这台电脑或手机浏览器的 localStorage 里，换一台设备看到的是另一份数据。
+        适合演示、评审、单人练习，以及只有一台公用电脑的班级图书角。
+      </td>
+    </tr>
+    <tr>
+      <th>共享部署版</th>
+      <td>
+        使用 Node.js 内置模块与 SQLite 文件数据库，一条 <code>node server/index.js</code> 启动，
+        同一局域网内的电脑与手机访问同一个地址，看到的是同一份数据，账号密码与借阅记录跨设备共享。
+        适合真正需要多人同时预约、库存必须一致的系部图书室。
+      </td>
+    </tr>
+  </table>
+
+  <div class="note-box">
+    <b>当前你访问的是单机演示版。</b>
+    它不提供跨设备的账号同步：你在自己电脑上登录后产生的借阅记录，只保存在你自己这台机器的浏览器里。
+    这是纯前端方案固有的边界，本课题把它写进说明，不做模糊处理。
+  </div>
+
+  <h2>二、为什么先做单机演示版</h2>
+  <p>
+    课题开始时最紧迫的问题是“有没有一个能跑起来、看得见的东西”，而不是“能不能支撑几十人同时操作”。
+    在没有服务器预算、也没有运维人员的条件下，纯前端方案能在一周内把检索、详情、预约、借还、后台十个模块全部跑通，
+    让指导老师和同学先看到完整的业务流程。这一步做完，才有资格讨论后端该怎么接。
+  </p>
+  <p>
+    为了不给将来换后端留下返工，页面脚本从一开始就只通过一个统一的
+    <code>api(路径, 参数)</code> 入口取数，接口形状照搬 REST 的路径与方法。
+    单机版的这个入口后面接的是一张本地路由表；共享版的同一个入口接的是真实的 HTTP 请求。
+    两层之间的分界线只有一处，页面代码一行都不用改。
+  </p>
+
+  <h2>三、共享版是怎么解决多用户问题的</h2>
+  <ul>
+    <li><b>账号与会话</b>：登录成功后服务端签发 Cookie 会话，密码只保存随机盐与 SHA-256 摘要，不落明文。</li>
+    <li><b>库存一致性</b>：借出一册副本时先把该册状态改为已借出，再写借阅记录，同一个操作放在一个事务里完成。</li>
+    <li><b>预约排队</b>：归还时在同一事务内把该书最早一位排队读者的预约置为「已到书」并锁定那一册，
+      避免两个人同时拿到同一册。</li>
+    <li><b>权限分级</b>：读者、馆员、管理员三种角色，读者调用后台接口直接返回「没有该操作权限」。</li>
+  </ul>
+
+  <h2>四、数字形象看板</h2>
+  <p>
+    看板是本课题在“展示面”上的重点。它把馆藏规模、在架比例、外借与逾期、注册读者、累计借出、开放分类
+    六项指标做成一块可以挂在走廊屏幕上的画面，左侧是分类馆藏分布，中间是五个主题书架的藏书构成，
+    右侧是近十四天的借还柱状图，底部是借阅排行与借阅规则。
+  </p>
+  <p>
+    看板与借阅系统共用同一份数据，管理员在后台改动书目或办理借还之后，看板在三十秒内自动刷新。
+    对参观者来说，它提供的是“这个图书室此刻在发生什么”的直观印象；
+    对管理员来说，它是一块不需要操作、抬眼就能看的仪表。
+  </p>
+  <p><a class="btn btn-ghost" href="board.html">打开数字看板 →</a></p>
+
+  <h2>五、五心主题书架</h2>
+  <p>
+    五个主题书架把馆藏按育人方向重新组织一遍：红心对应家国情怀与国情观察，仁心对应把使用门槛降下来，
+    恒心对应阅读的积累与持续，匠心对应精确到册的账，创心对应技术上的新做法。
+    检索页可以按书架筛选，看板可以看到每一架有多少种书。
+  </p>
+  <p>
+    这套对应关系不是给系统贴标签，而是让图书室的工作能跟系部的德育安排对上话：
+    书单由系部推荐、图书室落实采购与编目，借阅数据反过来为下一学期的主题阅读活动提供依据。
+  </p>
+
+  <h2>六、代码在哪里</h2>
+  <p>
+    单机演示版：<code>library-static/</code>，包含 9 个页面、9 份样式、16 份脚本与一份种子数据，零第三方依赖。
+  </p>
+  <p>
+    共享部署版：<code>library/</code>，服务端 9 个文件，使用 Node.js 内置的 <code>node:http</code> 与
+    <code>node:sqlite</code>，不安装任何 npm 包。
+  </p>
+</main>
+
+<div id="site-footer"></div>
+<script type="module">
+  import { mountHeader, mountFooter } from './assets/js/common.js';
+  await mountHeader({ active: '' });
+  mountFooter();
+</script>
+</body>
+</html>

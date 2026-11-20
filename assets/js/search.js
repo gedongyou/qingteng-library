@@ -1,6 +1,7 @@
 import {
   $, $$, api, mountHeader, mountFooter, bookCard, escapeHtml, emptyHtml, params, setParams,
 } from './common.js';
+import { WUXIN } from './wuxin.js';
 
 const me = await mountHeader();
 mountFooter();
@@ -10,6 +11,7 @@ const state = {
   category: params().get('category') || '',
   status: params().get('status') || '',
   sort: params().get('sort') || 'newest',
+  wuxin: params().get('wuxin') || '',
   page: Number(params().get('page')) || 1,
   size: 12,
 };
@@ -33,6 +35,21 @@ $('#kw').value = state.keyword;
 catSel.value = state.category;
 $('#status').value = state.status;
 $('#sort').value = state.sort;
+
+/* 五心书架筛选条 */
+$('#wuxin-bar').innerHTML = `
+  <span class="wb-label">主题书架</span>
+  ${WUXIN.map((w) => `<button class="wb-chip ${state.wuxin === w.key ? 'on' : ''}"
+      data-wx="${w.key}" style="--wx:${w.color}">
+      <i>${w.name[0]}</i>${w.name}<em>${w.motto}</em></button>`).join('')}`;
+$('#wuxin-bar').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-wx]');
+  if (!b) return;
+  state.wuxin = state.wuxin === b.dataset.wx ? '' : b.dataset.wx;
+  $$('#wuxin-bar .wb-chip').forEach((x) => x.classList.toggle('on', x.dataset.wx === state.wuxin));
+  state.page = 1;
+  go();
+});
 
 /* 事件 */
 $('#filter-form').addEventListener('submit', (e) => {
@@ -60,7 +77,8 @@ $('#cat-nav').addEventListener('click', (e) => {
   go();
 });
 $('#clear').addEventListener('click', () => {
-  Object.assign(state, { keyword: '', category: '', status: '', sort: 'newest', page: 1 });
+  Object.assign(state, { keyword: '', category: '', status: '', sort: 'newest', wuxin: '', page: 1 });
+  $$('#wuxin-bar .wb-chip').forEach((x) => x.classList.remove('on'));
   $('#kw').value = ''; catSel.value = ''; $('#status').value = ''; $('#sort').value = 'newest';
   go();
 });
@@ -69,6 +87,7 @@ function go() {
   setParams({
     keyword: state.keyword || null, category: state.category || null,
     status: state.status || null, sort: state.sort === 'newest' ? null : state.sort,
+    wuxin: state.wuxin || null,
     page: state.page > 1 ? state.page : null,
   });
   render();
@@ -87,6 +106,7 @@ async function render() {
     ...(state.keyword ? { keyword: state.keyword } : {}),
     ...(state.category ? { category: state.category } : {}),
     ...(state.status ? { status: state.status } : {}),
+    ...(state.wuxin ? { wuxin: state.wuxin } : {}),
   });
   let data;
   try {
@@ -99,15 +119,17 @@ async function render() {
   // 侧栏高亮
   $$('#cat-nav a').forEach((a) => a.classList.toggle('on', a.dataset.cat === String(state.category)));
 
-  const hasFilter = state.keyword || state.category || state.status;
+  const hasFilter = state.keyword || state.category || state.status || state.wuxin;
   $('#clear').hidden = !hasFilter;
 
   const catName = cats.find((c) => String(c.id) === String(state.category))?.name;
+  const wxName = WUXIN.find((w) => w.key === state.wuxin)?.name;
   $('#result-summary').innerHTML = data.total === 0
     ? '没有找到符合条件的图书'
     : `找到 <b>${data.total}</b> 种图书` +
       (state.keyword ? `，关键词「${escapeHtml(state.keyword)}」` : '') +
       (catName ? `，分类「${escapeHtml(catName)}」` : '') +
+      (wxName ? `，${wxName}主题书架` : '') +
       (state.status === 'available' ? '，仅看在架' : state.status === 'out' ? '，仅看已借完' : '') +
       `（第 ${data.page} / ${data.pages} 页）`;
 
