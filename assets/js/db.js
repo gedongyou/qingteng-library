@@ -1,9 +1,10 @@
-/* 浏览器内数据层：localStorage 持久化 + 首启种子数据
-   —— 没有后端、没有网络请求，所有表都是内存里的数组，改完立刻写回 localStorage */
+/* 浏览器内数据层：单一 localStorage 键持久化 + 首启种子数据
+   —— 全站只用一个键 KEY，业务数据与登录状态都放在这一份快照里 */
 import { SEED } from './seed-data.js';
 
 const KEY = 'qingteng.library.db.v1';
-const SESSION_KEY = 'qingteng.library.session.v1';
+// 旧版本单独存登录状态用的键，读到就并进主快照并删除
+const LEGACY_SESSION_KEY = 'qingteng.library.session.v1';
 
 export const clone = (v) => JSON.parse(JSON.stringify(v));
 
@@ -16,6 +17,7 @@ function freshDb() {
     if (!Array.isArray(rows)) continue;
     db.meta.seq[name] = rows.reduce((m, r) => Math.max(m, Number(r.id) || 0), 0);
   }
+  db.session = null;
   return db;
 }
 
@@ -29,7 +31,9 @@ export function load() {
       const parsed = JSON.parse(raw);
       if (parsed && parsed.books && parsed.copies) {
         if (!parsed.meta) parsed.meta = { version: 1, seq: {} };
+        if (!('session' in parsed)) parsed.session = null;
         db = parsed;
+        migrateLegacySession();
         return db;
       }
     }
@@ -37,15 +41,33 @@ export function load() {
     console.warn('本地数据读取失败，将重新初始化：', err);
   }
   db = freshDb();
+  migrateLegacySession();
   save();
   return db;
+}
+
+/** 把旧版单独存放的登录状态并进主快照，随后删掉旧键 */
+function migrateLegacySession() {
+  try {
+    const legacy = localStorage.getItem(LEGACY_SESSION_KEY);
+    if (legacy) {
+      if (!db.session) {
+        const s = JSON.parse(legacy);
+        if (s && s.userId && !(s.expiresAt && new Date(s.expiresAt) < new Date())) {
+          db.session = s;
+          save();
+        }
+      }
+      localStorage.removeItem(LEGACY_SESSION_KEY);
+    }
+  } catch { /* 忽略 */ }
 }
 
 let saveTimer = null;
 export function save() {
   if (!db) return;
   clearTimeout(saveTimer);
-  // 略微延迟合并连续写入，避免每次 setState 都序列化整库
+  // 略微延迟合并连续写入，避免每次改动都序列化整库
   saveTimer = setTimeout(() => {
     try {
       localStorage.setItem(KEY, JSON.stringify(db));
@@ -61,7 +83,7 @@ export function flush() {
   try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (err) { console.error(err); }
 }
 
-/** 恢复出厂演示数据 */
+/** 恢复出厂演示数据（登录状态一并清空） */
 export function resetDb() {
   db = freshDb();
   flush();
@@ -75,15 +97,15 @@ export function nextId(table) {
   return d.meta.seq[table];
 }
 
-/* ---------------- 会话（纯前端，存在 localStorage） ---------------- */
+/* ---------------- 会话（存在主快照的 session 字段里） ---------------- */
 export function getSession() {
   try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    const s = JSON.parse(raw);
+    const d = load();
+    const s = d.session;
     if (!s || !s.userId) return null;
     if (s.expiresAt && new Date(s.expiresAt) < new Date()) {
-      localStorage.removeItem(SESSION_KEY);
+      d.session = null;
+      save();
       return null;
     }
     return s;
@@ -91,17 +113,23 @@ export function getSession() {
 }
 
 export function setSession(userId, days = 7) {
-  const s = {
+  const d = load();
+  d.session = {
     userId,
     createdAt: new Date().toISOString(),
     expiresAt: new Date(Date.now() + days * 864e5).toISOString(),
   };
-  try { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); } catch { /* 忽略 */ }
-  return s;
+  // 登录态立即落盘，避免刷新或关标签页时丢登录
+  flush();
+  return d.session;
 }
 
 export function clearSession() {
-  try { localStorage.removeItem(SESSION_KEY); } catch { /* 忽略 */ }
+  const d = load();
+  if (d.session) {
+    d.session = null;
+    flush();
+  }
 }
 
 /* ---------------- 便捷查询 ---------------- */
