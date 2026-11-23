@@ -861,7 +861,7 @@ GET('/api/admin/settings', () => {
   return {
     siteName: getSetting('siteName'), siteSub: getSetting('siteSub'),
     noticeBar: getSetting('noticeBar'), rules: getRules(),
-    dbFile: '浏览器 localStorage（qingteng.library.db.v1）',
+    dbFile: '站点内置数据集',
     counts: {
       books: s.books.length, copies: s.copies.length, borrows: s.borrows.length,
       reservations: s.reservations.length, users: s.users.length, logs: s.logs.length,
